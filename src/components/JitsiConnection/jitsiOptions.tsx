@@ -64,11 +64,23 @@ export const localTrackOptions = {
 export const getConnectionOptions = (): object => {
   let serverConfig: any = {}
   try {
-    serverConfig = require("./../../serverConfig")
+    console.log("TEST:" + process.env.REACT_APP_LOAD_SERVERCONFIG)
+
+    if(process.env.REACT_APP_LOAD_SERVERCONFIG){
+      console.log("loading Config from serverConfig")
+      serverConfig = require("./../../serverConfig")
+    }
+    else{
+      console.log('loading Config from ENV-Variables')
+      serverConfig.connectionOptions = globalThis._env_.connectionOptions
+    }
   } catch (e) {
+    console.log(e)
+    console.log("loading Config from serverConfig-example")
     serverConfig = require("./../../serverConfig-example")
   }
 
+  console.log(serverConfig.connectionOptions)
   return serverConfig.connectionOptions
 }
 
