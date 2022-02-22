@@ -1,14 +1,9 @@
-import { Meta } from '@storybook/react/types-6-0';
-import * as React from 'react';
-import { Button } from './Button';
-import {ReactComponent as CallIcon} from './../../../assets/call.svg'
+import { Meta } from '@storybook/react';
+import { Button} from './Button';
 
 export default {
-  title: "Components/Button"
+  title: "Components/Button",
+  component: Button,
 } as Meta
 
-export const Default = () => <Button>Test</Button>
-
-export const Secondary = () => <Button type="primary">Test</Button>
-
-export const Danger = () => <Button type="danger"><CallIcon/> Call</Button>
+export const Default = ({round}) => <Button round={round} >Test</Button>

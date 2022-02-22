@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useConnectionStore } from './../../store/ConnectionStore'
 import { useConferenceStore } from './../../store/ConferenceStore'
 import {useParams} from 'react-router-dom'
@@ -11,7 +11,7 @@ const getInitJitsi = store => store.initJitsiMeet
 const getConnectServer = store => store.connectServer
 const getJitsiMeet = store => store.initJitsiMeet
 const getDisconnectServer = store => store.disconnectServer
-const getInitConference  = store => store.init
+const getInitConference  = store => store.initConference
 
 const JitsiConnection = () => {
   const disconnectServer = useConnectionStore(getDisconnectServer)
@@ -29,9 +29,9 @@ const JitsiConnection = () => {
   },[initJitsiMeet])
 
   useEffect(() => {
-    connectServer(id)
+    connectServer()
     return ()=> disconnectServer()
-  },[id, connectServer, disconnectServer])
+  },[connectServer, disconnectServer])
 
   useEffect(() => {
     if(jsMeet && connected) {

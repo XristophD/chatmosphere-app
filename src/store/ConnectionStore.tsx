@@ -2,76 +2,15 @@ import { mountStoreDevtool } from "simple-zustand-devtools"
 import create from "zustand"
 import {
   getConnectionOptions,
-  IJitsiInitOptions,
   jitsiInitOptions,
 } from "./../components/JitsiConnection/jitsiOptions"
-import { IJitsiConference, Track } from "./ConferenceStore"
 
-type IJitsiEvents = {
-  track: {
-    LOCAL_TRACK_STOPPED
-    TRACK_AUDIO_OUTPUT_CHANGED
-    TRACK_AUDIO_LEVEL_CHANGED
-  }
-  conference: {
-    USER_JOINED
-    USER_LEFT
-    TRACK_ADDED
-    TRACK_REMOVED
-    CONFERENCE_JOINED
-    TRACK_MUTE_CHANGED
-    CONFERENCE_ERROR
-  }
-  connection: {
-    CONNECTION_ESTABLISHED
-    CONNECTION_FAILED
-    CONNECTION_DISCONNECTED
-  }
-}
-
-type deviceType = "audio" | "video"
-
-type IMediaDevices = {
-  isDevicePermissionGranted: (type?: deviceType) => Promise<boolean>
-}
-
-type IJsMeet = {
-  init: (options: IJitsiInitOptions) => void
-  addTrack: (track: Track) => void
-  events: IJitsiEvents
-  mediaDevices: IMediaDevices
-  createLocalTracks: (
-    options: { devices: deviceType[] },
-    notSure: boolean,
-  ) => Promise<Track[]>
-  JitsiConnection: any
-}
-type IJitsiConnection = {
-  initJitsiConference: (
-    conferenceName: string,
-    conferenceOptions,
-  ) => IJitsiConference
-  connect: () => void
-  disconnect: () => void
-  xmpp:any
-}
-
-type IStore = {
-  serverUrl: string
-  jsMeet?: IJsMeet
-  connection?: IJitsiConnection
-  connected: boolean
-  error:any
-  initJitsiMeet: () => any
-  setConnected: () => void
-  setDisconnected: () => void
-  connectServer: (conferenceName: string) => void
-  disconnectServer: () => void
-}
-
-export const useConnectionStore = create<IStore>((set, get) => {
+// ****************************************************************
+// CONNECTION STORE
+// ****************************************************************
+export const useConnectionStore = create<IConnectionStore>((set, get) => {
   const initialState = {
-    serverUrl: "meet.jit.si",
+    serverUrl: process.env.REACT_APP_SERVICE_URL || "meet.jit.si",
     jsMeet: undefined,
     room: null,
     connection: undefined,
@@ -103,7 +42,8 @@ export const useConnectionStore = create<IStore>((set, get) => {
     // const result = await promise
     return await jitsiMeetPromise
   }
-  const connectServer = (conferenceName: string) => {
+  
+  const connectServer = () => {
     //Since jsMeet object is async (Promise), we should use also Promise to create a connection and connect. Because this is depandent to jsMeet object
     //But this function should be called only once if there is a current connection object.
     const connection = get().connection
